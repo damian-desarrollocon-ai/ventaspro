@@ -1,15 +1,18 @@
 import React from 'react'
 import { useAnalisisAvanzado } from '../../hooks/useAnalisisAvanzado'
+import { useAnalisisMensual } from '../../hooks/useAnalisisMensual'
 import { GraficaTendencias } from '../../components/GraficaTendencias'
 import { VendedoresNuevos } from '../../components/VendedoresNuevos'
 import { ComparativaEquipos } from '../../components/ComparativaEquipos'
 import { CrecimientoIndividual } from '../../components/CrecimientoIndividual'
+import { AnalisisMensual } from '../../components/AnalisisMensual'
 import { Loader, BarChart3 } from 'lucide-react'
 
 export const DashboardAdmin = () => {
-  const { datos, loading } = useAnalisisAvanzado()
+  const { datos, loading: loadingAvanzado } = useAnalisisAvanzado()
+  const { datosMensuales, loading: loadingMensual } = useAnalisisMensual()
 
-  if (loading) {
+  if (loadingAvanzado || loadingMensual) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -35,15 +38,15 @@ export const DashboardAdmin = () => {
         </div>
       </div>
 
-      {/* Gráfica de Tendencias */}
+      {/* NUEVO: Análisis Mensual */}
+      <AnalisisMensual datosMensuales={datosMensuales} />
+
+      {/* Gráfica de Tendencias Semanales */}
       <GraficaTendencias datos={datos.tendencias} />
 
       {/* Grid de 2 columnas */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Vendedores Nuevos */}
         <VendedoresNuevos vendedores={datos.vendedoresNuevos} />
-
-        {/* Comparativa Equipos */}
         <ComparativaEquipos equipos={datos.comparativaEquipos} />
       </div>
 
